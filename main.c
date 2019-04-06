@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "resources.h"
 
-/* Функция обработки сообщений */
+/* Message processing function */
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch(message) {
 		case WM_COMMAND: {
@@ -49,7 +49,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-/* Функция регистрации класса окон */
+/* Window class registration function */
 ATOM RegMyWindowClass(HINSTANCE hInst, LPCTSTR lpzClassName) {
 	WNDCLASS wc = {0};
 	wc.lpfnWndProc = (WNDPROC)WndProc;
@@ -62,7 +62,7 @@ ATOM RegMyWindowClass(HINSTANCE hInst, LPCTSTR lpzClassName) {
 	return RegisterClass(&wc);
 }
 
-/* Функция вхождений программы WinMain */
+/* WinMain program entry function */
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
 	FreeConsole();
 	srand(time(0));
@@ -70,7 +70,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	LPCTSTR lpzClass = "Window";
 	if(!RegMyWindowClass(hInstance, lpzClass)) return 1;
 	
-	/* Вычисление координат центра экрана */
+	/* Calculating screen center coordinates */
 	RECT screen;
 	GetWindowRect(GetDesktopWindow(), &screen);
 	int width = 500;
@@ -78,7 +78,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	int x = (screen.right - width)/2;
 	int y = (screen.bottom - height)/2;
     
-	/* Создание окна */
+	/*Creating window */
 	HWND hWnd = CreateWindow(
 		lpzClass,
 		"PassGen",
@@ -91,7 +91,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		NULL
 	);
 	
-	/* Создание кнопки "Сгенерировать" */
+	/* Creating button "Generate" */
 	HWND GenBtn = CreateWindow(
 		"Button",
 		"Generate",
@@ -104,7 +104,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		NULL
 	);
 
-	/* Создание кнопки "Очистить" */
+	/* Creating button "Reset" */
 	HWND ResetBtn = CreateWindow(
 		"Button",
 		"Reset",
@@ -117,7 +117,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		NULL
 	);
 	
-	/* Создание метки "N" */
+	/* Creating label "N" */
 	HWND NumLabel = CreateWindowEx(
 		WM_CTLCOLORSTATIC,
 		"Static",
@@ -131,7 +131,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		NULL
 	);
 
-	/* Создание первого текстового поля */
+	/* Creating first editbox */
 	HWND NumEdit = CreateWindowEx(
 		WS_EX_CLIENTEDGE,
 		"Edit",
@@ -145,7 +145,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		NULL
 	);
 
-	/* Создание метки "Пароль" */
+	/* Creating label "Password" */
 	HWND PassLabel = CreateWindowEx(
 		WM_CTLCOLORSTATIC,
 		"Static",
@@ -159,7 +159,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		NULL
 	);
 
-	/* Создание второго текстового поля */
+	/* Creating second editbox */
 	HWND PassEdit = CreateWindowEx(
 		WS_EX_CLIENTEDGE,
 		"Edit",
