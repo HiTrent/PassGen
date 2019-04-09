@@ -1,33 +1,34 @@
 #include <windows.h>
 #include <commctrl.h>
 #include <time.h>
-#include <stdio.h>
 #include "resources.h"
+#define MAX 3
 
 /* Message processing function */
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch(message) {
 		case WM_COMMAND: {
 			if(LOWORD(wParam) == GENBTN) {
-				char str[1024] = {};
-				GetDlgItemText(hWnd, NUMEDIT, (LPSTR)str, 1024);
+				char str[MAX] = {};
+				GetDlgItemText(hWnd, NUMEDIT, (LPSTR)str, MAX + 1);
 				
-				int n = 0, j = 1;
-				for(int i = 1023; i >= 0; i--) {
-					if(str[i] >= '0' && str[i] <= '9') {
-						n += (str[i]-'0') * j;
-						j *= 10;
-					}
+				int n = 0;
+				for(int i = MAX-1, j = 1; i >= 0; i--) if(str[i]) {
+					n += (str[i]-'0') * j;
+					j *= 10;
 				}
 				
-				memset(str, 0, sizeof(str));				
+				char *res;
+				res = (char*)malloc((n + 1) * sizeof(char));
+				res[n] = '\0';
+				
 				for(int i = 0; i < n; i++) switch(rand() % 3 + 1) {
-					case 1: str[i] = rand() % 10 + '0'; break; //012345...
-					case 2: str[i] = rand() % 26 + 'A'; break; //ABCDEF...
-					case 3: str[i] = rand() % 26 + 'a'; break; //abcdef...
+					case 1: res[i] = rand() % 10 + '0'; break; //012345...
+					case 2: res[i] = rand() % 26 + 'A'; break; //ABCDEF...
+					case 3: res[i] = rand() % 26 + 'a'; break; //abcdef...
         			}
-
-				SetDlgItemText(hWnd, PASSEDIT, (LPSTR)str);
+				
+				SetDlgItemText(hWnd, PASSEDIT, (LPSTR)res);
 			}
 
 			else if(LOWORD(wParam) == RESETBTN) {
@@ -51,14 +52,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 /* Window class registration function */
 ATOM RegMyWindowClass(HINSTANCE hInst, LPCTSTR lpzClassName) {
-	WNDCLASS wc = {0};
-	wc.lpfnWndProc = (WNDPROC)WndProc;
-	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.hInstance = hInst;
+	WNDCLASS wc	 = {};
+	wc.lpfnWndProc	 = (WNDPROC)WndProc;
+	wc.style	 = CS_HREDRAW | CS_VREDRAW;
+	wc.hInstance	 = hInst;
 	wc.lpszClassName = lpzClassName;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hCursor	 = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)COLOR_WINDOWFRAME;
-	wc.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON));
+	wc.hIcon	 = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_ICON));
 	return RegisterClass(&wc);
 }
 
@@ -78,7 +79,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	int x = (screen.right - width)/2;
 	int y = (screen.bottom - height)/2;
     
-	/*Creating window */
+	/* Creating window */
 	HWND hWnd = CreateWindow(
 		lpzClass,
 		"PassGen",
@@ -91,7 +92,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		NULL
 	);
 	
-	/* Creating button "Generate" */
+	/* Creating "Generate" button */
 	HWND GenBtn = CreateWindow(
 		"Button",
 		"Generate",
@@ -104,7 +105,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		NULL
 	);
 
-	/* Creating button "Reset" */
+	/* Creating "Reset" button */
 	HWND ResetBtn = CreateWindow(
 		"Button",
 		"Reset",
@@ -117,7 +118,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		NULL
 	);
 	
-	/* Creating label "N" */
+	/* Creating "N" label */
 	HWND NumLabel = CreateWindowEx(
 		WM_CTLCOLORSTATIC,
 		"Static",
@@ -136,7 +137,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		WS_EX_CLIENTEDGE,
 		"Edit",
 		"",
-		WS_CHILD | WS_VISIBLE,
+		WS_CHILD | WS_VISIBLE | ES_NUMBER,
 		125, 50,
 		250, 23,
 		hWnd,
@@ -144,8 +145,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		hInstance,
 		NULL
 	);
+	
+	SendMessage(NumEdit, EM_SETLIMITTEXT, MAX, 0);
 
-	/* Creating label "Password" */
+	/* Creating "Password" label */
 	HWND PassLabel = CreateWindowEx(
 		WM_CTLCOLORSTATIC,
 		"Static",
@@ -192,10 +195,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	SendMessage(PassLabel, WM_SETFONT, (WPARAM)font, TRUE);	
 	SendMessage(PassEdit, WM_SETFONT, (WPARAM)font, TRUE);
 
-	MSG msg = {0};
+	MSG msg = {};
 	int state = 0;
-	while((state = GetMessage(&msg, NULL, 0, 0 )) != 0)   
-	{
+	while((state = GetMessage(&msg, NULL, 0, 0 )) != 0) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
