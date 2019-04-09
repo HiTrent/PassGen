@@ -188,12 +188,12 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		"Segoe UI"
 	);
 
-	SendMessage(GenBtn, WM_SETFONT, (WPARAM)font, TRUE);
-	SendMessage(ResetBtn, WM_SETFONT, (WPARAM)font, TRUE);
-	SendMessage(NumLabel, WM_SETFONT, (WPARAM)font, TRUE);	
-	SendMessage(NumEdit, WM_SETFONT, (WPARAM)font, TRUE);
+	SendMessage(GenBtn,    WM_SETFONT, (WPARAM)font, TRUE);
+	SendMessage(ResetBtn,  WM_SETFONT, (WPARAM)font, TRUE);
+	SendMessage(NumLabel,  WM_SETFONT, (WPARAM)font, TRUE);	
+	SendMessage(NumEdit,   WM_SETFONT, (WPARAM)font, TRUE);
 	SendMessage(PassLabel, WM_SETFONT, (WPARAM)font, TRUE);	
-	SendMessage(PassEdit, WM_SETFONT, (WPARAM)font, TRUE);
+	SendMessage(PassEdit,  WM_SETFONT, (WPARAM)font, TRUE);
 
 	MSG msg = {};
 	int state = 0;
