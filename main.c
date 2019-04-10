@@ -44,6 +44,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			return (LRESULT)GetStockObject (NULL_BRUSH);
 		} break;
 
+		case WM_GETMINMAXINFO: {
+			MINMAXINFO *pInfo = (MINMAXINFO *)lParam;
+			POINT Min = {500, 300};
+			POINT Max = {500, 300};
+			pInfo->ptMinTrackSize = Min;
+			pInfo->ptMaxTrackSize = Max;
+			return 0;
+		} break;	
+			
 		case WM_DESTROY: PostQuitMessage(0); break;
 		default: return DefWindowProc(hWnd, message, wParam, lParam);
 	}
@@ -83,7 +92,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	HWND hWnd = CreateWindow(
 		lpzClass,
 		"PassGen",
-		WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+		WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX | WS_VISIBLE,
 		x, y,
 		width, height,
 		NULL,
