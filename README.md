@@ -1,4 +1,4 @@
-![ ](https://user-images.githubusercontent.com/46074546/55676109-7c1c8400-58d6-11e9-98aa-f42d61ae2fea.png)
+![image](https://user-images.githubusercontent.com/46074546/55914816-c5c7e000-5bf0-11e9-88c1-2579aeb16eec.png)
 
 Build instructions (Windows only):
 ```
